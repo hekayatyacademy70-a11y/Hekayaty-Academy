@@ -1,0 +1,879 @@
+# HEKAYATY ACADEMY — COMPLETE PREMIUM FRONTEND-ONLY PLATFORM PROMPT
+
+Create a world-class, production-ready, frontend-only web application called **Hekayaty Academy (أكاديمية حكاياتي)**.
+
+This is not a simple course platform.
+
+It is a complete Arabic educational ecosystem for discovering, training, developing, publishing, and monetizing writers, storytellers, illustrators, young talents, and creative professionals.
+
+The platform must feel like a premium combination of MasterClass, Coursera, Udemy, Skillshare, Duolingo, Notion, and a modern publishing ecosystem, while maintaining a unique literary identity inspired by Hekayaty.
+
+---
+
+## GENERAL REQUIREMENTS
+
+Build a frontend-only application.
+
+Use:
+
+* React
+* TypeScript
+* Tailwind CSS
+* Vite
+* React Router
+* Framer Motion
+* Shadcn UI
+* Lucide Icons
+
+The entire project must be structured as if it is ready for backend integration later.
+
+All data should be mocked using realistic JSON objects, local state management, and service abstraction layers.
+
+No backend implementation.
+
+No API implementation.
+
+No database implementation.
+
+Frontend architecture must simulate real production behavior.
+
+---
+
+# DESIGN SYSTEM
+
+## Brand Identity
+
+Theme:
+
+Premium Literary Luxury
+
+Atmosphere:
+
+* Elegant
+* Inspiring
+* Academic
+* Professional
+* Creative
+* Cinematic
+
+Visual feeling:
+
+"Where future Arab authors are created."
+
+---
+
+## Colors
+
+Use Hekayaty brand colors:
+
+Primary:
+
+* Deep Literary Brown
+* Rich Gold
+* Warm Ivory
+
+Secondary:
+
+* Soft Beige
+* Dark Bronze
+* Elegant Black
+
+Accents:
+
+* Golden gradients
+* Premium hover effects
+
+Never use random bright colors.
+
+---
+
+## Typography
+
+Arabic-first design.
+
+Beautiful Arabic typography.
+
+Perfect RTL support.
+
+Elegant spacing.
+
+Strong hierarchy.
+
+Readable on all devices.
+
+---
+
+## RESPONSIVE REQUIREMENTS
+
+The platform must be:
+
+* Mobile First
+* Tablet Optimized
+* Desktop Optimized
+* Large Screen Optimized
+* Touch Device Friendly
+
+Support:
+
+* 320px width
+* 375px
+* 390px
+* 414px
+* 768px
+* 1024px
+* 1440px
+* 1920px
+* Ultra-wide monitors
+
+No horizontal scrolling.
+
+No broken layouts.
+
+No overflow issues.
+
+No spacing inconsistencies.
+
+---
+
+## PERFORMANCE REQUIREMENTS
+
+Implement frontend performance optimizations:
+
+* Route lazy loading
+* Component lazy loading
+* Image lazy loading
+* Code splitting
+* Memoization
+* Virtualized large lists
+* Optimized animations
+* Skeleton loading states
+* Prefetching routes
+* Fast page transitions
+
+Target:
+
+* Lighthouse 95+
+* Smooth 60fps animations
+* Fast mobile experience
+
+---
+
+# PLATFORM STRUCTURE
+
+Create all pages.
+
+Create all navigation.
+
+Create all dashboards.
+
+Create all states.
+
+Create all user flows.
+
+Create all empty states.
+
+Create all loading states.
+
+Create all success states.
+
+Create all error states.
+
+---
+
+# PUBLIC WEBSITE
+
+## Home Page
+
+Sections:
+
+* Hero Section
+* Academy Introduction
+* Why Hekayaty Academy
+* Featured Courses
+* Learning Paths
+* Kids Academy
+* AI Writing Lab
+* Competitions
+* Publishing Program
+* Success Stories
+* Top Students
+* Featured Instructors
+* Certificates
+* CTA Section
+* Footer
+
+---
+
+## About Page
+
+* Vision
+* Mission
+* Values
+* Academy Story
+* Team
+* Partners
+
+---
+
+## Courses Page
+
+Advanced filtering:
+
+* Category
+* Level
+* Instructor
+* Rating
+* Duration
+* Language
+* Certificate Availability
+
+Grid/List view.
+
+---
+
+## Course Details Page
+
+Includes:
+
+* Hero
+* Instructor
+* Curriculum
+* Lessons
+* Requirements
+* Reviews
+* FAQs
+* Certificate Info
+* Enroll Button
+
+---
+
+## Learning Paths Page
+
+Show:
+
+* Beginner Writer
+* Professional Novelist
+* Publisher Path
+* Storytelling Path
+* AI Writer Path
+* Young Author Path
+
+---
+
+## Instructors Page
+
+Show all instructors.
+
+Profiles.
+
+Courses.
+
+Ratings.
+
+Achievements.
+
+---
+
+## Events Page
+
+Writing workshops.
+
+Live sessions.
+
+Webinars.
+
+Competitions.
+
+---
+
+## Certificates Page
+
+Verification showcase.
+
+Certificate examples.
+
+Achievement system.
+
+---
+
+## Blog Page
+
+Articles.
+
+Writing tips.
+
+Publishing guides.
+
+AI guides.
+
+---
+
+# AUTHENTICATION
+
+Frontend-only flows:
+
+* Sign Up
+* Sign In
+* Forgot Password
+* Reset Password
+* Verify Email UI
+* Social Login UI
+
+Role simulation:
+
+* Student
+* Instructor
+* Reviewer
+* Parent
+* Admin
+* Super Admin
+
+---
+
+# STUDENT DASHBOARD
+
+Create a complete dashboard.
+
+Sections:
+
+## Overview
+
+* Progress
+* Active Courses
+* Achievements
+* XP
+* Certificates
+
+---
+
+## My Courses
+
+* Continue Learning
+* Completed
+* Wishlist
+
+---
+
+## Learning Calendar
+
+* Upcoming Lessons
+* Live Sessions
+
+---
+
+## Assignments
+
+* Pending
+* Submitted
+* Reviewed
+
+---
+
+## Projects
+
+* Stories
+* Novels
+* Writing Challenges
+
+---
+
+## Certificates
+
+Certificate gallery.
+
+Downloads.
+
+Verification.
+
+---
+
+## Competitions
+
+* Joined
+* Upcoming
+* Results
+
+---
+
+## Messages
+
+Inbox simulation.
+
+---
+
+## Settings
+
+Profile.
+
+Preferences.
+
+Notifications.
+
+Security.
+
+---
+
+# WRITING WORKSPACE
+
+Create a complete writing studio.
+
+Features:
+
+* Rich text editor
+* Chapter management
+* Auto save simulation
+* Word count
+* Reading time
+* Writing goals
+* Focus mode
+* Dark mode
+* Grammar review UI
+* AI assistant panel
+
+---
+
+# AI WRITING LAB
+
+Create dedicated AI pages:
+
+* Idea Generator
+* Character Generator
+* Plot Generator
+* World Builder
+* Name Generator
+* Manuscript Analyzer
+* Marketing Assistant
+
+Frontend-only simulated outputs.
+
+Beautiful interactive interfaces.
+
+---
+
+# SCHOOL OF CREATIVE WRITING
+
+Create categories:
+
+* Fiction
+* Fantasy
+* Horror
+* Romance
+* Historical Fiction
+* Science Fiction
+* Short Stories
+* Children's Literature
+
+Each category contains:
+
+* Courses
+* Paths
+* Projects
+
+---
+
+# SCHOOL OF PUBLISHING
+
+Create:
+
+* Editing
+* Proofreading
+* Cover Design
+* Formatting
+* ISBN
+* Digital Publishing
+* Print Publishing
+
+---
+
+# SCHOOL OF BOOK MARKETING
+
+Create:
+
+* Personal Branding
+* Social Media
+* Book Launches
+* Ads
+* Audience Building
+
+---
+
+# SCHOOL OF STORYTELLING
+
+Create:
+
+* Script Writing
+* Film Writing
+* TV Writing
+* Game Narratives
+* Podcast Storytelling
+
+---
+
+# SCHOOL OF AUDIOBOOKS
+
+Create:
+
+* Voice Acting
+* Narration
+* Audio Production
+* Audiobook Publishing
+
+---
+
+# SCHOOL OF ILLUSTRATION & COMICS
+
+Create:
+
+* Character Design
+* Manga
+* Comics
+* Cover Art
+* Digital Illustration
+
+---
+
+# HEKAYATY KIDS ACADEMY
+
+Dedicated section.
+
+Separate visual identity.
+
+Age groups:
+
+* 7–10
+* 11–14
+* 15–18
+
+Pages:
+
+* Kids Home
+* Kids Courses
+* Challenges
+* Talent Discovery
+* Parent Portal
+
+---
+
+# TALENT DISCOVERY PROGRAM
+
+Create:
+
+* Weekly Challenges
+* Monthly Challenges
+* Talent Ranking
+* Creative Missions
+* Achievement Tracking
+
+---
+
+# YOUNG AUTHORS PROGRAM
+
+Create complete journey:
+
+Beginner
+
+↓
+
+Intermediate
+
+↓
+
+Advanced
+
+↓
+
+Published Author
+
+Track progression visually.
+
+---
+
+# COMMUNITY
+
+Create:
+
+* Forums
+* Discussion Rooms
+* Writing Clubs
+* Peer Reviews
+* Challenges
+
+Frontend simulation only.
+
+---
+
+# LIVE ACADEMY
+
+Create:
+
+* Upcoming Streams
+* Live Workshops
+* Replay Library
+
+Professional streaming UI.
+
+---
+
+# DIGITAL LIBRARY
+
+Create:
+
+* Books
+* PDFs
+* Templates
+* Guides
+* Resources
+
+Searchable interface.
+
+---
+
+# COMPETITIONS CENTER
+
+Create:
+
+* Hekayaty Awards
+* Monthly Challenges
+* Writing Marathons
+* Publishing Competitions
+
+Detailed competition pages.
+
+Leaderboards.
+
+Results.
+
+---
+
+# CERTIFICATE SYSTEM
+
+Create:
+
+* Certificate Gallery
+* Certificate Verification UI
+* Achievement Pages
+* Badge System
+
+Levels:
+
+* Beginner
+* Intermediate
+* Professional
+* Expert
+* Certified Trainer
+
+---
+
+# GAMIFICATION SYSTEM
+
+Create:
+
+* XP
+* Levels
+* Streaks
+* Challenges
+* Badges
+* Achievements
+* Leaderboards
+
+Ranks:
+
+* Explorer
+* Writer
+* Novelist
+* Master Author
+* Literary Legend
+
+---
+
+# INSTRUCTOR DASHBOARD
+
+Create full instructor panel:
+
+* Overview
+* Courses
+* Students
+* Assignments
+* Revenue
+* Reviews
+* Analytics
+* Live Sessions
+* Messages
+* Settings
+
+---
+
+# PARENT DASHBOARD
+
+Create:
+
+* Child Progress
+* Achievements
+* Reports
+* Certificates
+* Notifications
+
+---
+
+# REVIEWER DASHBOARD
+
+Create:
+
+* Manuscript Reviews
+* Course Reviews
+* Competitions Reviews
+* Evaluation Center
+
+---
+
+# ADMIN PANEL
+
+Create enterprise-level admin dashboard.
+
+Modules:
+
+## Analytics
+
+* Revenue
+* Students
+* Courses
+* Engagement
+
+---
+
+## User Management
+
+* Students
+* Instructors
+* Parents
+* Reviewers
+
+---
+
+## Course Management
+
+Create/Edit/Delete UI.
+
+---
+
+## Instructor Management
+
+Approval workflow.
+
+---
+
+## Competition Management
+
+Full management system.
+
+---
+
+## Certificate Management
+
+Verification center.
+
+---
+
+## Community Moderation
+
+Reports.
+
+Flags.
+
+Actions.
+
+---
+
+## Content Management
+
+Pages.
+
+Articles.
+
+Resources.
+
+---
+
+## Events Management
+
+Workshops.
+
+Streams.
+
+Webinars.
+
+---
+
+## Kids Academy Management
+
+Programs.
+
+Challenges.
+
+Talent tracking.
+
+---
+
+## Spotlight Management
+
+Feature students.
+
+Feature instructors.
+
+Feature authors.
+
+---
+
+## Platform Settings
+
+Branding.
+
+Themes.
+
+Notifications.
+
+Security.
+
+---
+
+# SUPER ADMIN PANEL
+
+Create advanced enterprise controls:
+
+* System Health
+* Audit Logs
+* Global Settings
+* Feature Flags
+* Role Permissions
+* Platform Monitoring
+
+---
+
+# UX REQUIREMENTS
+
+Create:
+
+* Empty States
+* Success States
+* Error States
+* Loading States
+* Skeleton Screens
+* Toast Notifications
+* Confirmation Dialogs
+* Accessibility Features
+
+---
+
+# FINAL EXPECTATION
+
+The final result must feel like a premium, investor-ready, production-quality platform that could realistically become the largest Arabic ecosystem for:
+
+* Writing
+* Publishing
+* Storytelling
+* Creative Education
+* Young Talent Development
+* Literary Competitions
+* Author Growth
+
+Everything should look polished, modern, luxurious, professional, scalable, and consistent across every page and device.

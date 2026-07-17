@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "Hekayaty Academy"
+version = "1.0.0"
+id = "artifacts/hekayaty-academy"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 26073
+
+[services.development]
+run = "pnpm --filter @workspace/hekayaty-academy run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/hekayaty-academy", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/hekayaty-academy/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "26073"
+BASE_PATH = "/"
