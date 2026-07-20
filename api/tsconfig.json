@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "noEmitOnError": false,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "typeRoots": [
+      "../node_modules/@types",
+      "../artifacts/api-server/node_modules/@types"
+    ]
+  },
+  "include": [
+    "./**/*.ts",
+    "../artifacts/api-server/**/*.ts"
+  ]
+}
