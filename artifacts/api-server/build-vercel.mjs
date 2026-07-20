@@ -9,11 +9,12 @@ globalThis.require = createRequire(import.meta.url);
 
 async function buildApi() {
   await build({
-    entryPoints: [path.resolve(__dirname, "./src/app.ts")],
+    entryPoints: { "index": path.resolve(__dirname, "./src/app.ts") },
     bundle: true,
     platform: "node",
     format: "esm",
-    outfile: path.resolve(__dirname, "../../api/index.mjs"),
+    outdir: path.resolve(__dirname, "../../api"),
+    outExtension: { ".js": ".mjs" },
     external: [
       "*.node",
       "sharp",
