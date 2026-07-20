@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "concurrently -n \"API,WEB\" -c \"cyan,magenta\" \"pnpm --filter api-server run dev\" \"pnpm --filter hekayaty-academy run dev\"",
     "build": "pnpm run typecheck && pnpm -r --if-present run build",
+    "build:vercel": "pnpm --filter @workspace/hekayaty-academy run build && node artifacts/api-server/build-vercel.mjs",
     "typecheck:libs": "tsc --build",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck"
   },
@@ -14,6 +15,8 @@
   },
   "devDependencies": {
     "concurrently": "^10.0.3",
+    "esbuild": "0.27.3",
+    "esbuild-plugin-pino": "^2.3.3",
     "prettier": "^3.9.5",
     "typescript": "~5.9.3"
   }
