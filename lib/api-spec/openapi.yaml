@@ -10,20 +10,7 @@ servers:
 tags:
   - name: health
     description: Health operations
-paths:
-  /healthz:
-    get:
-      operationId: healthCheck
-      tags: [health]
-      summary: Health check
-      description: Returns server health status
-      responses:
-        "200":
-          description: Healthy
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/HealthStatus"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +21,876 @@ components:
       required:
         - status
 
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        avatarUrl:
+          type: string
+          nullable: true
+        bio:
+          type: string
+          nullable: true
+        role:
+          type: string
+          enum: [guest, student, instructor, reviewer, parent, admin, superadmin]
+        subscriptionTier:
+          type: string
+          enum: [free, pro, elite]
+      required:
+        - id
+        - email
+        - name
+        - role
+        - subscriptionTier
+
+    AuthResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+      required:
+        - accessToken
+        - refreshToken
+        - user
+
+    Lesson:
+      type: object
+      properties:
+        id: { type: string }
+        sectionId: { type: string }
+        title: { type: string }
+        type: { type: string, enum: [video, text, quiz] }
+        content: { type: string, nullable: true }
+        youtubeVideoId: { type: string, nullable: true }
+        duration: { type: integer, nullable: true }
+        order: { type: integer }
+        isFreePreview: { type: boolean }
+      required: [id, sectionId, title, type, order, isFreePreview]
+
+    Section:
+      type: object
+      properties:
+        id: { type: string }
+        courseId: { type: string }
+        title: { type: string }
+        order: { type: integer }
+        lessons:
+          type: array
+          items:
+            $ref: "#/components/schemas/Lesson"
+      required: [id, courseId, title, order]
+
+    Course:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string }
+        description: { type: string, nullable: true }
+        thumbnailUrl: { type: string, nullable: true }
+        instructorId: { type: string }
+        price: { type: integer }
+        status: { type: string, enum: [draft, published, archived] }
+        level: { type: string, enum: [beginner, intermediate, advanced, all] }
+        isPremium: { type: boolean }
+      required: [id, title, instructorId, price, status, level, isPremium]
+
+    EnrollmentWithProgress:
+      type: object
+      properties:
+        enrollmentId: { type: string }
+        enrolledAt: { type: string }
+        course:
+          $ref: "#/components/schemas/Course"
+        completedLessons: { type: integer }
+        totalLessons: { type: integer }
+        progressPercent: { type: integer }
+      required: [enrollmentId, enrolledAt, course, completedLessons, totalLessons, progressPercent]
+
+    UserStats:
+      type: object
+      properties:
+        totalEnrollments: { type: integer }
+        completedCourses: { type: integer }
+        totalLessonsCompleted: { type: integer }
+        currentStreakDays: { type: integer }
+      required: [totalEnrollments, completedCourses, totalLessonsCompleted, currentStreakDays]
+
+    InstructorCourse:
+      allOf:
+        - $ref: "#/components/schemas/Course"
+        - type: object
+          properties:
+            totalStudents: { type: integer }
+            totalRevenue: { type: integer }
+            averageRating: { type: number }
+            totalLessons: { type: integer }
+          required: [totalStudents, totalRevenue, totalLessons]
+
+    InstructorStats:
+      type: object
+      properties:
+        totalStudents: { type: integer }
+        totalRevenue: { type: integer }
+        totalCourses: { type: integer }
+        publishedCourses: { type: integer }
+        averageRating: { type: number }
+      required: [totalStudents, totalRevenue, totalCourses, publishedCourses]
+
+    InstructorStudent:
+      type: object
+      properties:
+        id: { type: string }
+        enrollmentId: { type: string }
+        name: { type: string }
+        email: { type: string }
+        avatar: { type: string, nullable: true }
+        enrolledAt: { type: string }
+        courseId: { type: string }
+        progress: { type: integer }
+        lessonsCompleted: { type: integer }
+        totalLessons: { type: integer }
+        lastActivity: { type: string }
+      required: [id, enrollmentId, name, email, enrolledAt, courseId, progress, lessonsCompleted, totalLessons, lastActivity]
+
+    Assignment:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string }
+        description: { type: string }
+        dueDate: { type: string, nullable: true }
+        maxScore: { type: integer }
+        courseId: { type: string }
+        status: { type: string, enum: [published, draft] }
+        submissions: { type: integer }
+        pending: { type: integer }
+        averageScore: { type: integer }
+      required: [id, title, description, maxScore, courseId, status, submissions, pending, averageScore]
+
+    Certificate:
+      type: object
+      properties:
+        id: { type: string }
+        userId: { type: string }
+        courseId: { type: string }
+        issuedById: { type: string, nullable: true }
+        pdfUrl: { type: string, nullable: true }
+        issuedAt: { type: string }
+        user:
+          $ref: "#/components/schemas/User"
+      required: [id, userId, courseId, issuedAt, user]
+
+    Announcement:
+      type: object
+      properties:
+        id: { type: string }
+        courseId: { type: string }
+        title: { type: string }
+        content: { type: string }
+        priority: { type: string, enum: [normal, important, urgent] }
+        status: { type: string, enum: [published, draft] }
+        readCount: { type: integer }
+        publishedAt: { type: string }
+      required: [id, courseId, title, content, priority, status, readCount, publishedAt]
+
+    Chapter:
+      type: object
+      properties:
+        id: { type: string }
+        manuscriptId: { type: string }
+        title: { type: string }
+        content: { type: string }
+        wordCount: { type: integer }
+        order: { type: integer }
+        isLocked: { type: boolean }
+      required: [id, manuscriptId, title, content, wordCount, order, isLocked]
+
+    Manuscript:
+      type: object
+      properties:
+        id: { type: string }
+        authorId: { type: string }
+        title: { type: string }
+        synopsis: { type: string, nullable: true }
+        genre: { type: string, enum: [novel, short_story, screenplay, poetry, non_fiction, children, other] }
+        status: { type: string, enum: [draft, writing, editing, published, archived] }
+        targetWordCount: { type: integer }
+        isPublic: { type: boolean }
+        coverImageUrl: { type: string, nullable: true }
+        createdAt: { type: string }
+        updatedAt: { type: string }
+      required: [id, authorId, title, genre, status, targetWordCount, isPublic, createdAt, updatedAt]
+
+    ManuscriptDetails:
+      allOf:
+        - $ref: "#/components/schemas/Manuscript"
+        - type: object
+          properties:
+            chapters:
+              type: array
+              items:
+                $ref: "#/components/schemas/Chapter"
+          required: [chapters]
+
+    CourseDetails:
+      allOf:
+        - $ref: "#/components/schemas/Course"
+        - type: object
+          properties:
+            instructor:
+              $ref: "#/components/schemas/User"
+            sections:
+              type: array
+              items:
+                $ref: "#/components/schemas/Section"
+          required: [sections]
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []
+
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      security: []
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /auth/register:
+    post:
+      operationId: register
+      tags: [auth]
+      summary: Register a new user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                name:
+                  type: string
+              required: [email, password, name]
+      responses:
+        "200":
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login to an existing account
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required: [email, password]
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+
+  /auth/me:
+    get:
+      operationId: getAuthMe
+      tags: [auth]
+      summary: Get the current authenticated user
+      responses:
+        "200":
+          description: Current user data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+    patch:
+      operationId: updateAuthMe
+      tags: [auth]
+      summary: Update the current authenticated user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                avatarUrl:
+                  type: string
+                  nullable: true
+                bio:
+                  type: string
+                  nullable: true
+      responses:
+        "200":
+          description: Updated user data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+
+  /instructors:
+    get:
+      operationId: getInstructors
+      tags: [instructors]
+      summary: Get top instructors
+      security: []
+      responses:
+        "200":
+          description: List of top instructors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    name: { type: string }
+                    specialty: { type: string }
+                    rating: { type: number }
+                    students: { type: integer }
+                    courses: { type: integer }
+                    bio: { type: string }
+                    avatar: { type: string, nullable: true }
+                  required: [id, name, specialty, rating, students, courses, bio]
+
+  /courses:
+    get:
+      operationId: getCourses
+      tags: [courses]
+      summary: Get all courses
+      security: []
+      responses:
+        "200":
+          description: List of published courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Course"
+
+  /courses/{id}:
+    get:
+      operationId: getCourseById
+      tags: [courses]
+      summary: Get a course by ID with its sections and lessons
+      security: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Course details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CourseDetails"
+    delete:
+      operationId: deleteInstructorCourse
+      tags: [courses]
+      summary: Delete a course owned by the current instructor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Course deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                required: [success]
+        "403":
+          description: Forbidden
+        "404":
+          description: Not found
+
+  /courses/{id}/lessons/{lessonId}:
+    get:
+      operationId: getLessonById
+      tags: [courses]
+      summary: Get a specific lesson
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: lessonId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lesson data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lesson"
+
+  /enrollments:
+    post:
+      operationId: enrollInCourse
+      tags: [enrollments]
+      summary: Enroll the current user in a course
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                courseId:
+                  type: string
+              required: [courseId]
+      responses:
+        "200":
+          description: Enrollment successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+
+  /lessons/{lessonId}/complete:
+    post:
+      operationId: completeLesson
+      tags: [enrollments]
+      summary: Mark a lesson as completed for the current user
+      parameters:
+        - name: lessonId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lesson marked as complete
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+
+  /assets/register:
+    post:
+      operationId: registerAsset
+      tags: [assets]
+      summary: Register a successfully uploaded asset (e.g., from Cloudinary) in the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fileName: { type: string }
+                mimeType: { type: string }
+                fileSizeBytes: { type: integer }
+                category:
+                  type: string
+                  enum: [video, thumbnail, avatar, manuscript, submission, document, misc]
+                provider: { type: string, default: 'cloudinary' }
+                providerId: { type: string }
+                providerUrl: { type: string }
+              required: [fileName, mimeType, fileSizeBytes, category, provider, providerId, providerUrl]
+      responses:
+        "200":
+          description: Asset successfully registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  assetId: { type: string }
+
+  /me/enrollments:
+    get:
+      operationId: getMyEnrollments
+      tags: [me]
+      summary: Get the current user's enrolled courses with progress
+      responses:
+        "200":
+          description: List of enrollments with course data and progress
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EnrollmentWithProgress"
+
+  /me/stats:
+    get:
+      operationId: getMyStats
+      tags: [me]
+      summary: Get the current user's learning statistics
+      responses:
+        "200":
+          description: User learning stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserStats"
+
+  /me/instructor-courses:
+    get:
+      operationId: getMyInstructorCourses
+      tags: [me]
+      summary: Get all courses created by the current instructor with stats
+      responses:
+        "200":
+          description: List of instructor's courses with enrollment and revenue data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/InstructorCourse"
+
+  /me/instructor-stats:
+    get:
+      operationId: getMyInstructorStats
+      tags: [me]
+      summary: Get the current instructor's aggregate statistics
+      responses:
+        "200":
+          description: Instructor statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstructorStats"
+
+  /me/instructor-students:
+    get:
+      operationId: getMyInstructorStudents
+      tags: [me]
+      summary: Get all students enrolled in the instructor's courses
+      responses:
+        "200":
+          description: List of students
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/InstructorStudent"
+
+  /me/instructor-assignments:
+    get:
+      operationId: getMyInstructorAssignments
+      tags: [me]
+      summary: Get all assignments for the instructor's courses
+      responses:
+        "200":
+          description: List of assignments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Assignment"
+    post:
+      operationId: createAssignment
+      tags: [me]
+      summary: Create a new assignment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                courseId: { type: string }
+                title: { type: string }
+                description: { type: string }
+                maxScore: { type: integer }
+                dueDate: { type: string }
+                status: { type: string }
+              required: [courseId, title, description]
+      responses:
+        "200":
+          description: Created assignment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Assignment"
+
+  /me/instructor-certificates:
+    get:
+      operationId: getMyInstructorCertificates
+      tags: [me]
+      summary: Get all certificates issued by the instructor
+      responses:
+        "200":
+          description: List of certificates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Certificate"
+
+  /me/instructor-announcements:
+    get:
+      operationId: getMyInstructorAnnouncements
+      tags: [me]
+      summary: Get all announcements created by the instructor
+      responses:
+        "200":
+          description: List of announcements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Announcement"
+    post:
+      operationId: createAnnouncement
+      tags: [me]
+      summary: Create a new announcement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                courseId: { type: string }
+                title: { type: string }
+                content: { type: string }
+                priority: { type: string }
+              required: [courseId, title, content]
+      responses:
+        "200":
+          description: Created announcement
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Announcement"
+
+  /workspaces/manuscripts:
+    get:
+      operationId: getMyManuscripts
+      tags: [workspace]
+      summary: Get all manuscripts for the authenticated author
+      responses:
+        "200":
+          description: A list of manuscripts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Manuscript"
+    post:
+      operationId: createManuscript
+      tags: [workspace]
+      summary: Create a new manuscript
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: { type: string }
+                genre: { type: string }
+              required: [title]
+      responses:
+        "201":
+          description: Created manuscript
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Manuscript"
+
+  /workspaces/manuscripts/{id}:
+    get:
+      operationId: getManuscriptDetails
+      tags: [workspace]
+      summary: Get details of a manuscript including chapters
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Manuscript details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ManuscriptDetails"
+    put:
+      operationId: updateManuscript
+      tags: [workspace]
+      summary: Update manuscript metadata
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: { type: string }
+                synopsis: { type: string }
+                targetWordCount: { type: integer }
+      responses:
+        "200":
+          description: Updated manuscript
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Manuscript"
+
+  /workspaces/manuscripts/{id}/chapters:
+    post:
+      operationId: createChapter
+      tags: [workspace]
+      summary: Add a new chapter to a manuscript
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: { type: string }
+              required: [title]
+      responses:
+        "201":
+          description: Created chapter
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Chapter"
+
+  /workspaces/chapters/{chapterId}:
+    put:
+      operationId: updateChapterContent
+      tags: [workspace]
+      summary: Save chapter content (auto-save endpoint)
+      parameters:
+        - name: chapterId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: { type: string }
+                content: { type: string }
+                wordCount: { type: integer }
+      responses:
+        "200":
+          description: Chapter saved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Chapter"
+
+  /workspaces/ai/generate:
+    post:
+      operationId: generateAiContent
+      tags: [workspace]
+      summary: Generate content using AI
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                prompt: { type: string }
+                context: { type: string }
+              required: [prompt]
+      responses:
+        "200":
+          description: Generated text
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  text: { type: string }
+                required: [text]

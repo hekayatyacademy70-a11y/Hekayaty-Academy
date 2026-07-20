@@ -1,5 +1,7 @@
+import "dotenv/config"; // Load .env FIRST before all other imports
 import app from "./app";
 import { logger } from "./lib/logger";
+
 
 const rawPort = process.env["PORT"];
 
@@ -8,6 +10,8 @@ if (!rawPort) {
     "PORT environment variable is required but was not provided.",
   );
 }
+
+
 
 const port = Number(rawPort);
 

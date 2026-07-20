@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
@@ -10,7 +11,7 @@ interface StatCardProps {
   className?: string;
 }
 
-export function StatCard({ title, value, icon: Icon, trend, trendUp, className }: StatCardProps) {
+export const StatCard = memo(function StatCard({ title, value, icon: Icon, trend, trendUp, className }: StatCardProps) {
   return (
     <Card className={cn("bg-card hover-elevate overflow-hidden", className)}>
       <CardContent className="p-6 relative">
@@ -31,4 +32,4 @@ export function StatCard({ title, value, icon: Icon, trend, trendUp, className }
       </CardContent>
     </Card>
   );
-}
+});

@@ -10,95 +10,95 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Moon, Sun, Menu, User, BookOpen, Crown } from "lucide-react";
-import { Role } from "@/context/AuthContext";
+import { Menu, User, BookOpen, Search } from "lucide-react";
 
 export function Navbar() {
   const [location] = useLocation();
-  const { role, setRole, isAuthenticated, user } = useAuth();
+  const { user, role, isAuthenticated, logout } = useAuth();
   const { theme, setTheme } = useTheme();
 
-  const isDashboard = location.startsWith("/dashboard") || 
-                      location.startsWith("/instructor") || 
-                      location.startsWith("/admin") ||
-                      location.startsWith("/superadmin") ||
-                      location.startsWith("/parent") ||
-                      location.startsWith("/reviewer");
+  const isDark = theme === "dark";
 
   const navLinks = [
     { label: "الرئيسية", path: "/" },
-    { label: "عن الأكاديمية", path: "/about" },
+    { label: "الأكاديمية", path: "/academy" },
     { label: "الدورات", path: "/courses" },
-    { label: "المسارات", path: "/paths" },
+    { label: "المقالات", path: "/articles" },
     { label: "الأطفال", path: "/kids" },
-    { label: "المجتمع", path: "/community" },
+    { label: "المسابقات", path: "/competitions" },
   ];
 
   const getDashboardPath = () => {
     switch(role) {
-      case 'Student': return '/dashboard';
-      case 'Instructor': return '/instructor';
-      case 'Reviewer': return '/reviewer';
-      case 'Parent': return '/parent';
-      case 'Admin': return '/admin';
-      case 'SuperAdmin': return '/superadmin';
+      case 'student': return '/dashboard';
+      case 'instructor': return '/instructor';
+      case 'reviewer': return '/reviewer';
+      case 'parent': return '/parent';
+      case 'admin': return '/admin';
+      case 'superadmin': return '/superadmin';
       default: return '/auth/login';
     }
   };
 
+  // Navbar background: always use global styling
+  const navBg = isDark
+      ? "sticky top-0 bg-black/90 backdrop-blur-md border-b border-[#D4A373]/20 text-white"
+      : "sticky top-0 bg-white/95 backdrop-blur-md border-b border-black/10 text-foreground shadow-sm";
+
+  const logoTextColor = isDark ? "text-white" : "text-gray-900";
+
+  const linkBase = isDark ? "text-white/80" : "text-gray-700";
+
+  const linkActive = isDark ? "text-[#D4A373] border-[#D4A373]" : "text-[#C49040] border-[#C49040]";
+
   return (
-    <nav className={`w-full z-50 transition-all duration-300 ${
-      isDashboard ? "bg-sidebar border-b border-sidebar-border text-sidebar-foreground" : "bg-background/80 backdrop-blur-lg border-b border-border sticky top-0"
-    }`}>
+    <nav className={`w-full z-50 transition-all duration-300 ${navBg}`}>
       <div className="container mx-auto px-4 md:px-8 flex items-center justify-between h-16 md:h-20">
         
         {/* Logo */}
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded bg-primary flex items-center justify-center text-primary-foreground">
-              <BookOpen className="w-5 h-5" />
+            <BookOpen className="w-7 h-7 text-[#D4A373]" />
+            <div className="flex flex-col">
+              <span className={`font-serif text-lg leading-none ${logoTextColor}`}>
+                أكاديمية حكاياتي
+              </span>
+              <span className="text-[0.55rem] tracking-[0.3em] text-[#D4A373] mt-1 uppercase">
+                - HEKAYATY ACADEMY -
+              </span>
             </div>
-            <span className={`font-serif text-2xl font-bold ${isDashboard ? "text-sidebar-primary-foreground" : "text-foreground"}`}>
-              حكاياتي
-            </span>
           </Link>
         </div>
 
         {/* Desktop Nav */}
-        {!isDashboard && (
-          <div className="hidden md:flex items-center gap-1 md:gap-4 lg:gap-8 font-medium">
-            {navLinks.map((link) => (
-              <Link 
-                key={link.path} 
-                href={link.path}
-                className={`text-sm hover:text-primary transition-colors ${
-                  location === link.path ? "text-primary font-bold" : "text-muted-foreground"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-        )}
+        <div className="hidden md:flex flex-1 justify-center items-center gap-4 lg:gap-6 font-medium">
+          {navLinks.map((link) => (
+            <Link 
+              key={link.path} 
+              href={link.path}
+              className={`text-[13px] hover:text-[#D4A373] transition-colors whitespace-nowrap pb-1 border-b-2 ${
+                location === link.path ? linkActive : `${linkBase} border-transparent`
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-3">
-          {/* Theme Toggle */}
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className={isDashboard ? "text-sidebar-foreground hover:bg-sidebar-accent" : ""}
-          >
-            {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-          </Button>
+        <div className="flex items-center gap-2">
 
+          {/* Theme Toggle */}
           {isAuthenticated ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className={`gap-2 ${isDashboard ? "text-sidebar-foreground hover:bg-sidebar-accent" : ""}`}>
-                  <div className="w-8 h-8 rounded-full bg-muted overflow-hidden">
-                    {user?.avatar ? <img src={user.avatar} alt="User" /> : <User className="w-full h-full p-1" />}
+                <Button variant="ghost" className={`gap-2 ${isDark ? "text-white hover:bg-white/10" : "text-gray-800 hover:bg-black/5"}`}>
+                  <div className="w-8 h-8 rounded-full bg-muted overflow-hidden flex items-center justify-center">
+                    {user?.avatarUrl ? (
+                      <img src={user.avatarUrl} alt={user.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <User className="w-5 h-5 text-muted-foreground" />
+                    )}
                   </div>
                   <span className="hidden sm:inline-block font-medium">{user?.name}</span>
                 </Button>
@@ -112,27 +112,12 @@ export function Navbar() {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 
-                <DropdownMenuLabel className="text-xs text-muted-foreground uppercase flex items-center gap-2">
-                  <Crown className="w-3 h-3" />
-                  محاكاة الصلاحيات (للتجربة)
-                </DropdownMenuLabel>
-                <div className="grid grid-cols-2 gap-1 p-1">
-                  {(['Student', 'Instructor', 'Reviewer', 'Parent', 'Admin', 'SuperAdmin'] as Role[]).map((r) => (
-                    <DropdownMenuItem 
-                      key={r} 
-                      onClick={() => setRole(r)}
-                      className={`text-xs justify-center cursor-pointer ${role === r ? 'bg-primary/10 text-primary font-bold' : ''}`}
-                    >
-                      {r}
-                    </DropdownMenuItem>
-                  ))}
-                  <DropdownMenuItem 
-                    onClick={() => setRole('Guest')}
-                    className="text-xs justify-center cursor-pointer col-span-2 text-destructive"
-                  >
-                    تسجيل الخروج
-                  </DropdownMenuItem>
-                </div>
+                <DropdownMenuItem 
+                  onClick={() => logout()}
+                  className="text-xs justify-center cursor-pointer col-span-2 text-destructive"
+                >
+                  تسجيل الخروج
+                </DropdownMenuItem>
                 
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
@@ -144,17 +129,31 @@ export function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className="hidden sm:flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-3">
+              <button className={`transition-colors ${isDark ? "text-white/80 hover:text-white" : "text-gray-500 hover:text-gray-800"}`}>
+                <Search className="w-5 h-5" />
+              </button>
               <Link href="/auth/login">
-                <Button variant="ghost" className="font-medium">تسجيل الدخول</Button>
+                <Button
+                  variant="outline"
+                  className={`font-medium px-5 rounded-md h-9 text-sm ${
+                    isDark
+                      ? "border-white/30 text-white bg-transparent hover:bg-white/10"
+                      : "border-gray-300 text-gray-800 bg-transparent hover:bg-black/5"
+                  }`}
+                >
+                  تسجيل الدخول
+                </Button>
               </Link>
               <Link href="/auth/register">
-                <Button className="font-medium bg-primary hover:bg-primary/90 text-primary-foreground">ابدأ مجاناً</Button>
+                <Button className="font-bold bg-[#D4A373] hover:bg-[#C49040] text-black px-6 rounded-md h-9 text-sm">
+                  إنضم الآن
+                </Button>
               </Link>
             </div>
           )}
 
-          {/* Mobile Menu Toggle (stub) */}
+          {/* Mobile Menu Toggle */}
           <Button variant="ghost" size="icon" className="md:hidden">
             <Menu className="w-6 h-6" />
           </Button>
@@ -163,3 +162,4 @@ export function Navbar() {
     </nav>
   );
 }
+

@@ -1,7 +1,6 @@
 import { Instructor } from "@/data/instructors";
-import { Card, CardContent } from "@/components/ui/card";
-import { StarRating } from "@/components/ui/StarRating";
 import { Link } from "wouter";
+import { ArrowLeft } from "lucide-react";
 
 interface InstructorCardProps {
   instructor: Instructor;
@@ -10,41 +9,45 @@ interface InstructorCardProps {
 export function InstructorCard({ instructor }: InstructorCardProps) {
   return (
     <Link href={`/instructors/${instructor.id}`} className="block h-full group">
-      <Card className="text-center hover:shadow-md transition-shadow h-full bg-card hover-elevate">
-        <CardContent className="pt-6 pb-6 px-4 flex flex-col h-full">
-          <div className="relative mx-auto w-24 h-24 mb-4">
-            <div className="absolute inset-0 rounded-full border-2 border-primary/20 scale-110 group-hover:scale-100 group-hover:border-primary transition-all duration-300" />
-            <img 
-              src={instructor.avatar} 
-              alt={instructor.name} 
-              className="w-full h-full object-cover rounded-full z-10 relative bg-muted"
+      <div className="relative h-full bg-card border border-border/50 rounded-2xl overflow-hidden transition-all duration-300 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1">
+        
+        {/* Subtle top gradient accent */}
+        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-primary/0 via-primary/60 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+        <div className="p-6 flex flex-col items-center text-center gap-3">
+          {/* Avatar */}
+          <div className="relative w-20 h-20 shrink-0">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 scale-110 group-hover:scale-115 transition-transform duration-300" />
+            <img
+              src={instructor.avatar}
+              alt={instructor.name}
+              className="relative w-full h-full object-cover rounded-full border-2 border-background shadow-md"
             />
           </div>
-          
-          <h3 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">{instructor.name}</h3>
-          <p className="text-sm text-primary mb-3 font-medium">{instructor.specialty}</p>
-          
-          <div className="flex justify-center mb-3">
-            <StarRating rating={instructor.rating} />
+
+          {/* Name */}
+          <div>
+            <h3 className="font-bold text-base leading-tight group-hover:text-primary transition-colors duration-200">
+              {instructor.name}
+            </h3>
+            {/* Specialty badge */}
+            <span className="inline-block mt-1.5 text-xs font-medium text-primary/80 bg-primary/8 border border-primary/15 px-2.5 py-0.5 rounded-full">
+              {instructor.specialty}
+            </span>
           </div>
-          
-          <p className="text-xs text-muted-foreground line-clamp-3 mb-4 flex-1">
-            {instructor.bio}
+
+          {/* Bio */}
+          <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3 flex-1">
+            {instructor.bio || "مدرب معتمد في الأكاديمية"}
           </p>
-          
-          <div className="flex items-center justify-center gap-4 text-xs font-medium text-foreground bg-muted/50 rounded-lg p-2 mt-auto">
-            <div>
-              <span className="block text-lg font-bold text-primary">{instructor.courses}</span>
-              <span className="text-muted-foreground">دورات</span>
-            </div>
-            <div className="w-px h-8 bg-border" />
-            <div>
-              <span className="block text-lg font-bold text-primary">{(instructor.students / 1000).toFixed(1)}k</span>
-              <span className="text-muted-foreground">طالب</span>
-            </div>
+
+          {/* CTA */}
+          <div className="flex items-center gap-1 text-xs font-semibold text-primary opacity-0 group-hover:opacity-100 -translate-y-1 group-hover:translate-y-0 transition-all duration-200 mt-auto pt-1">
+            <span>عرض الملف الشخصي</span>
+            <ArrowLeft className="w-3 h-3" />
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </Link>
   );
 }
