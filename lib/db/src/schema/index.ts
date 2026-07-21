@@ -19,3 +19,4 @@ export * from "./announcements";
 export * from "./learning_paths";
 export * from "./article_categories";
 export * from "./articles";
+export * from "./password_resets";

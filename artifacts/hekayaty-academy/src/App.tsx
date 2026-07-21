@@ -31,6 +31,8 @@ const KidsAcademy     = lazy(() => import('@/pages/kids/index'));
 // Auth
 const Login           = lazy(() => import('@/pages/auth/login'));
 const Register        = lazy(() => import('@/pages/auth/register'));
+const ForgotPassword  = lazy(() => import('@/pages/auth/forgot-password'));
+const ResetPassword   = lazy(() => import('@/pages/auth/reset-password'));
 
 // Dashboards
 const StudentDashboard = lazy(() => import('@/pages/dashboard/index'));
@@ -143,8 +145,10 @@ function Router() {
           <Route path="/" component={Home} />
 
           {/* ── Auth ───────────────────────────────────────── */}
-          <Route path="/auth/login"    component={Login} />
-          <Route path="/auth/register" component={Register} />
+          <Route path="/auth/login"           component={Login} />
+          <Route path="/auth/register"        component={Register} />
+          <Route path="/auth/forgot-password" component={ForgotPassword} />
+          <Route path="/auth/reset-password"  component={ResetPassword} />
 
           {/* ── Public Hubs ────────────────────────────────── */}
           <Route path="/academy" component={Academy} />

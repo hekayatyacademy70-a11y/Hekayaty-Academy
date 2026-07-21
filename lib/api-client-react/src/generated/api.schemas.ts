@@ -386,3 +386,19 @@ export type GenerateAiContent200 = {
   text: string;
 };
 
+export type ForgotPasswordBody = {
+  email: string;
+};
+
+export type ForgotPassword200 = {
+  message: string;
+};
+
+export type ResetPasswordBody = {
+  token: string;
+  password: string;
+};
+
+export type ResetPassword200 = {
+  message: string;
+};

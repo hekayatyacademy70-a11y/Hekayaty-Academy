@@ -68,8 +68,6 @@ router.get("/me", authenticate, async (req, res) => {
 router.patch("/me", authenticate, async (req, res) => {
   try {
     const user = req.user as AuthUser;
-    // We should ideally use Zod validation here, but we can extract directly for now
-    // based on our OpenAPI spec: name, avatarUrl, bio
     const updates = {
       name: req.body.name,
       avatarUrl: req.body.avatarUrl,
@@ -81,6 +79,36 @@ router.patch("/me", authenticate, async (req, res) => {
   } catch (error: any) {
     console.error("[PATCH /me] Error:", error);
     res.status(400).json({ error: error.message || "Failed to update profile" });
+  }
+});
+
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email || typeof email !== "string") {
+      res.status(400).json({ error: "Email is required" });
+      return;
+    }
+    const result = await AuthService.forgotPassword(email);
+    res.json(result);
+  } catch (error: any) {
+    console.error("[POST /forgot-password] Error:", error);
+    res.status(500).json({ error: error.message || "Failed to process request" });
+  }
+});
+
+router.post("/reset-password", async (req, res) => {
+  try {
+    const { token, password } = req.body;
+    if (!token || !password) {
+      res.status(400).json({ error: "Token and password are required" });
+      return;
+    }
+    const result = await AuthService.resetPassword(token, password);
+    res.json(result);
+  } catch (error: any) {
+    console.error("[POST /reset-password] Error:", error);
+    res.status(400).json({ error: error.message || "Failed to reset password" });
   }
 });
 
