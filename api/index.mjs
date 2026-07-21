@@ -19130,14 +19130,14 @@ var require_etag = __commonJS({
   "node_modules/.pnpm/etag@1.8.1/node_modules/etag/index.js"(exports, module) {
     "use strict";
     module.exports = etag;
-    var crypto2 = __require("crypto");
+    var crypto3 = __require("crypto");
     var Stats = __require("fs").Stats;
     var toString = Object.prototype.toString;
     function entitytag(entity) {
       if (entity.length === 0) {
         return '"0-2jmj7l5rSw0yVb/vlWAYkK/YBwk"';
       }
-      var hash2 = crypto2.createHash("sha1").update(entity, "utf8").digest("base64").substring(0, 27);
+      var hash2 = crypto3.createHash("sha1").update(entity, "utf8").digest("base64").substring(0, 27);
       var len = typeof entity === "string" ? Buffer.byteLength(entity, "utf8") : entity.length;
       return '"' + len.toString(16) + "-" + hash2 + '"';
     }
@@ -22624,17 +22624,17 @@ var require_content_disposition = __commonJS({
 // node_modules/.pnpm/cookie-signature@1.2.2/node_modules/cookie-signature/index.js
 var require_cookie_signature = __commonJS({
   "node_modules/.pnpm/cookie-signature@1.2.2/node_modules/cookie-signature/index.js"(exports) {
-    var crypto2 = __require("crypto");
+    var crypto3 = __require("crypto");
     exports.sign = function(val, secret) {
       if ("string" != typeof val) throw new TypeError("Cookie value must be provided as a string.");
       if (null == secret) throw new TypeError("Secret key must be provided.");
-      return val + "." + crypto2.createHmac("sha256", secret).update(val).digest("base64").replace(/\=+$/, "");
+      return val + "." + crypto3.createHmac("sha256", secret).update(val).digest("base64").replace(/\=+$/, "");
     };
     exports.unsign = function(input, secret) {
       if ("string" != typeof input) throw new TypeError("Signed cookie string must be provided.");
       if (null == secret) throw new TypeError("Secret key must be provided.");
       var tentativeValue = input.slice(0, input.lastIndexOf(".")), expectedInput = exports.sign(tentativeValue, secret), expectedBuffer = Buffer.from(expectedInput), inputBuffer = Buffer.from(input);
-      return expectedBuffer.length === inputBuffer.length && crypto2.timingSafeEqual(expectedBuffer, inputBuffer) ? tentativeValue : false;
+      return expectedBuffer.length === inputBuffer.length && crypto3.timingSafeEqual(expectedBuffer, inputBuffer) ? tentativeValue : false;
     };
   }
 });
@@ -45725,14 +45725,14 @@ var require_buffer_equal_constant_time = __commonJS({
 var require_jwa = __commonJS({
   "node_modules/.pnpm/jwa@2.0.1/node_modules/jwa/index.js"(exports, module) {
     var Buffer3 = require_safe_buffer().Buffer;
-    var crypto2 = __require("crypto");
+    var crypto3 = __require("crypto");
     var formatEcdsa = require_ecdsa_sig_formatter();
     var util2 = __require("util");
     var MSG_INVALID_ALGORITHM = '"%s" is not a valid algorithm.\n  Supported algorithms are:\n  "HS256", "HS384", "HS512", "RS256", "RS384", "RS512", "PS256", "PS384", "PS512", "ES256", "ES384", "ES512" and "none".';
     var MSG_INVALID_SECRET = "secret must be a string or buffer";
     var MSG_INVALID_VERIFIER_KEY = "key must be a string or a buffer";
     var MSG_INVALID_SIGNER_KEY = "key must be a string, a buffer or an object";
-    var supportsKeyObjects = typeof crypto2.createPublicKey === "function";
+    var supportsKeyObjects = typeof crypto3.createPublicKey === "function";
     if (supportsKeyObjects) {
       MSG_INVALID_VERIFIER_KEY += " or a KeyObject";
       MSG_INVALID_SECRET += "or a KeyObject";
@@ -45822,17 +45822,17 @@ var require_jwa = __commonJS({
       return function sign(thing, secret) {
         checkIsSecretKey(secret);
         thing = normalizeInput(thing);
-        var hmac = crypto2.createHmac("sha" + bits, secret);
+        var hmac = crypto3.createHmac("sha" + bits, secret);
         var sig = (hmac.update(thing), hmac.digest("base64"));
         return fromBase64(sig);
       };
     }
     var bufferEqual;
-    var timingSafeEqual = "timingSafeEqual" in crypto2 ? function timingSafeEqual2(a, b) {
+    var timingSafeEqual = "timingSafeEqual" in crypto3 ? function timingSafeEqual2(a, b) {
       if (a.byteLength !== b.byteLength) {
         return false;
       }
-      return crypto2.timingSafeEqual(a, b);
+      return crypto3.timingSafeEqual(a, b);
     } : function timingSafeEqual2(a, b) {
       if (!bufferEqual) {
         bufferEqual = require_buffer_equal_constant_time();
@@ -45849,7 +45849,7 @@ var require_jwa = __commonJS({
       return function sign(thing, privateKey) {
         checkIsPrivateKey(privateKey);
         thing = normalizeInput(thing);
-        var signer = crypto2.createSign("RSA-SHA" + bits);
+        var signer = crypto3.createSign("RSA-SHA" + bits);
         var sig = (signer.update(thing), signer.sign(privateKey, "base64"));
         return fromBase64(sig);
       };
@@ -45859,7 +45859,7 @@ var require_jwa = __commonJS({
         checkIsPublicKey(publicKey);
         thing = normalizeInput(thing);
         signature = toBase64(signature);
-        var verifier = crypto2.createVerify("RSA-SHA" + bits);
+        var verifier = crypto3.createVerify("RSA-SHA" + bits);
         verifier.update(thing);
         return verifier.verify(publicKey, signature, "base64");
       };
@@ -45868,11 +45868,11 @@ var require_jwa = __commonJS({
       return function sign(thing, privateKey) {
         checkIsPrivateKey(privateKey);
         thing = normalizeInput(thing);
-        var signer = crypto2.createSign("RSA-SHA" + bits);
+        var signer = crypto3.createSign("RSA-SHA" + bits);
         var sig = (signer.update(thing), signer.sign({
           key: privateKey,
-          padding: crypto2.constants.RSA_PKCS1_PSS_PADDING,
-          saltLength: crypto2.constants.RSA_PSS_SALTLEN_DIGEST
+          padding: crypto3.constants.RSA_PKCS1_PSS_PADDING,
+          saltLength: crypto3.constants.RSA_PSS_SALTLEN_DIGEST
         }, "base64"));
         return fromBase64(sig);
       };
@@ -45882,12 +45882,12 @@ var require_jwa = __commonJS({
         checkIsPublicKey(publicKey);
         thing = normalizeInput(thing);
         signature = toBase64(signature);
-        var verifier = crypto2.createVerify("RSA-SHA" + bits);
+        var verifier = crypto3.createVerify("RSA-SHA" + bits);
         verifier.update(thing);
         return verifier.verify({
           key: publicKey,
-          padding: crypto2.constants.RSA_PKCS1_PSS_PADDING,
-          saltLength: crypto2.constants.RSA_PSS_SALTLEN_DIGEST
+          padding: crypto3.constants.RSA_PKCS1_PSS_PADDING,
+          saltLength: crypto3.constants.RSA_PSS_SALTLEN_DIGEST
         }, signature, "base64");
       };
     }
@@ -62357,10 +62357,10 @@ var require_disk = __commonJS({
     var fs = __require("fs");
     var os2 = __require("os");
     var path = __require("path");
-    var crypto2 = __require("crypto");
+    var crypto3 = __require("crypto");
     var mkdirp = require_mkdirp();
     function getFilename(req, file, cb) {
-      crypto2.randomBytes(16, function(err, raw) {
+      crypto3.randomBytes(16, function(err, raw) {
         cb(err, err ? void 0 : raw.toString("hex"));
       });
     }
@@ -74284,11 +74284,11 @@ var require_encodeDoubleArray = __commonJS({
 // node_modules/.pnpm/cloudinary@2.10.0/node_modules/cloudinary/lib/auth_token.js
 var require_auth_token = __commonJS({
   "node_modules/.pnpm/cloudinary@2.10.0/node_modules/cloudinary/lib/auth_token.js"(exports, module) {
-    var crypto2 = __require("crypto");
+    var crypto3 = __require("crypto");
     var smart_escape = require_smart_escape();
     var unsafe = /([ "#%&'/:;<=>?@[\]^`{|}~]+)/g;
     function digest(message, key) {
-      return crypto2.createHmac("sha256", Buffer.from(key, "hex")).update(message).digest("hex");
+      return crypto3.createHmac("sha256", Buffer.from(key, "hex")).update(message).digest("hex");
     }
     function escapeToLower(url) {
       const safeUrl = smart_escape(url, unsafe);
@@ -74961,7 +74961,7 @@ var require_qPolyfill = __commonJS({
 // node_modules/.pnpm/cloudinary@2.10.0/node_modules/cloudinary/lib/utils/index.js
 var require_utils5 = __commonJS({
   "node_modules/.pnpm/cloudinary@2.10.0/node_modules/cloudinary/lib/utils/index.js"(exports, module) {
-    var crypto2 = __require("crypto");
+    var crypto3 = __require("crypto");
     var querystring = __require("querystring");
     var { URL: URL2 } = __require("url");
     var compact = require_compact();
@@ -75806,7 +75806,7 @@ var require_utils5 = __commonJS({
       return base_api_url_v1_1()([resource_type, action], options);
     }
     function random_public_id() {
-      return crypto2.randomBytes(12).toString("base64").replace(/[^a-z0-9]/g, "");
+      return crypto3.randomBytes(12).toString("base64").replace(/[^a-z0-9]/g, "");
     }
     function signed_preloaded_image(result) {
       return `${result.resource_type}/upload/v${result.version}/${filter([result.public_id, result.format], utils.present).join(".")}#${result.signature}`;
@@ -75835,7 +75835,7 @@ var require_utils5 = __commonJS({
       if (!SUPPORTED_SIGNATURE_ALGORITHMS.includes(signature_algorithm)) {
         throw new Error(`Signature algorithm ${signature_algorithm} is not supported. Supported algorithms: ${SUPPORTED_SIGNATURE_ALGORITHMS.join(", ")}`);
       }
-      const hash2 = crypto2.createHash(signature_algorithm).update(input).digest();
+      const hash2 = crypto3.createHash(signature_algorithm).update(input).digest();
       return Buffer.from(hash2).toString(encoding);
     }
     function clear_blank(hash2) {
@@ -94278,9 +94278,12 @@ var bcryptjs_default = {
 
 // artifacts/api-server/src/services/auth.service.ts
 var import_jsonwebtoken = __toESM(require_jsonwebtoken(), 1);
+import crypto2 from "crypto";
 var JWT_SECRET = process.env.JWT_SECRET || "super_secret_jwt_key_for_dev";
 var JWT_EXPIRES_IN = "1d";
 var REFRESH_EXPIRES_IN_DAYS = 7;
+var RESET_TOKEN_EXPIRES_MINUTES = 60;
+var SITE_URL = process.env.SITE_URL || "https://hekayaty-academy.vercel.app";
 var AuthService = class {
   static async register(data) {
     const { data: existing, error: findError } = await supabase.from("users").select("id").eq("email", data.email).limit(1);
@@ -94342,6 +94345,92 @@ var AuthService = class {
       throw new Error("User not found");
     }
     return this.sanitizeUser(user);
+  }
+  /**
+   * Initiates the forgot password flow.
+   * Generates a secure token, stores it in DB, and sends a reset email via Supabase.
+   */
+  static async forgotPassword(email) {
+    const normalizedEmail = email.toLowerCase().trim();
+    const { data: users } = await supabase.from("users").select("id, email, name").eq("email", normalizedEmail).limit(1);
+    const user = users?.[0];
+    if (!user) {
+      return { message: "If this email is registered, you will receive a reset link shortly." };
+    }
+    const token = crypto2.randomBytes(32).toString("hex");
+    const tokenHash = await bcryptjs_default.hash(token, 10);
+    const expiresAt = /* @__PURE__ */ new Date();
+    expiresAt.setMinutes(expiresAt.getMinutes() + RESET_TOKEN_EXPIRES_MINUTES);
+    await supabase.from("password_resets").delete().eq("user_id", user.id);
+    const { error: insertError } = await supabase.from("password_resets").insert({
+      user_id: user.id,
+      token_hash: tokenHash,
+      expires_at: expiresAt.toISOString()
+    });
+    if (insertError) {
+      console.error("[AuthService.forgotPassword] insert error:", insertError);
+      throw new Error("Failed to create reset token");
+    }
+    const resetUrl = `${SITE_URL}/auth/reset-password?token=${token}`;
+    console.log(`[AuthService.forgotPassword] Reset URL for ${normalizedEmail}: ${resetUrl}`);
+    try {
+      const { error: emailError } = await supabase.auth.admin?.inviteUserByEmail?.(normalizedEmail, {
+        redirectTo: resetUrl,
+        data: { resetToken: token, userName: user.name }
+      });
+      if (emailError) {
+        console.warn("[AuthService.forgotPassword] inviteUserByEmail failed:", emailError.message);
+      }
+    } catch (emailErr) {
+      console.error("[AuthService.forgotPassword] email send error:", emailErr);
+    }
+    try {
+      await supabase.auth.resetPasswordForEmail(normalizedEmail, {
+        redirectTo: resetUrl
+      });
+    } catch (fallbackErr) {
+      console.error("[AuthService.forgotPassword] resetPasswordForEmail error:", fallbackErr);
+    }
+    return { message: "If this email is registered, you will receive a reset link shortly." };
+  }
+  /**
+   * Validates the reset token and updates the user's password.
+   */
+  static async resetPassword(token, newPassword) {
+    if (!token || !newPassword) {
+      throw new Error("Invalid request");
+    }
+    if (newPassword.length < 8) {
+      throw new Error("Password must be at least 8 characters");
+    }
+    const { data: resets, error: fetchError } = await supabase.from("password_resets").select("*").gt("expires_at", (/* @__PURE__ */ new Date()).toISOString());
+    if (fetchError) {
+      console.error("[AuthService.resetPassword] fetch error:", fetchError);
+      throw new Error("Database error");
+    }
+    let matchedReset = null;
+    for (const reset of resets || []) {
+      const isMatch = await bcryptjs_default.compare(token, reset.token_hash);
+      if (isMatch) {
+        matchedReset = reset;
+        break;
+      }
+    }
+    if (!matchedReset) {
+      throw new Error("Invalid or expired reset token");
+    }
+    const newPasswordHash = await bcryptjs_default.hash(newPassword, 10);
+    const { error: updateError } = await supabase.from("users").update({
+      password_hash: newPasswordHash,
+      updated_at: (/* @__PURE__ */ new Date()).toISOString()
+    }).eq("id", matchedReset.user_id);
+    if (updateError) {
+      console.error("[AuthService.resetPassword] update error:", updateError);
+      throw new Error("Failed to update password");
+    }
+    await supabase.from("password_resets").delete().eq("id", matchedReset.id);
+    await supabase.from("sessions").delete().eq("user_id", matchedReset.user_id);
+    return { message: "Password reset successfully" };
   }
   static async generateTokens(user) {
     const accessToken = import_jsonwebtoken.default.sign(
@@ -94495,6 +94584,34 @@ router2.patch("/me", authenticate, async (req, res) => {
   } catch (error) {
     console.error("[PATCH /me] Error:", error);
     res.status(400).json({ error: error.message || "Failed to update profile" });
+  }
+});
+router2.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email || typeof email !== "string") {
+      res.status(400).json({ error: "Email is required" });
+      return;
+    }
+    const result = await AuthService.forgotPassword(email);
+    res.json(result);
+  } catch (error) {
+    console.error("[POST /forgot-password] Error:", error);
+    res.status(500).json({ error: error.message || "Failed to process request" });
+  }
+});
+router2.post("/reset-password", async (req, res) => {
+  try {
+    const { token, password } = req.body;
+    if (!token || !password) {
+      res.status(400).json({ error: "Token and password are required" });
+      return;
+    }
+    const result = await AuthService.resetPassword(token, password);
+    res.json(result);
+  } catch (error) {
+    console.error("[POST /reset-password] Error:", error);
+    res.status(400).json({ error: error.message || "Failed to reset password" });
   }
 });
 var auth_default = router2;

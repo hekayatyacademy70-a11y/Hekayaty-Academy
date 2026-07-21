@@ -46,6 +46,15 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get("/api/health", (req, res) => {
+  res.json({ 
+    ok: true, 
+    hasDbUrl: !!process.env.DATABASE_URL,
+    hasSupabase: !!process.env.SUPABASE_URL,
+    dbUrlPrefix: process.env.DATABASE_URL ? process.env.DATABASE_URL.substring(0, 15) + "..." : null
+  });
+});
+
 app.use("/api", router);
 
 // ─── Global Error Handler ───
