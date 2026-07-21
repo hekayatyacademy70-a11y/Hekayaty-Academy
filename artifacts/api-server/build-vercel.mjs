@@ -3,17 +3,23 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
 import esbuildPluginPino from "esbuild-plugin-pino";
+import fs from "fs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 globalThis.require = createRequire(import.meta.url);
 
+const ROOT = path.resolve(__dirname, "../..");
+const API_OUT = path.resolve(ROOT, "api");
+
 async function buildApi() {
+  console.log("🔨 Building API server...");
+  
   await build({
-    entryPoints: { "index": path.resolve(__dirname, "./src/app.ts") },
+    entryPoints: { "index": path.resolve(__dirname, "./src/vercel-entry.ts") },
     bundle: true,
     platform: "node",
     format: "esm",
-    outdir: path.resolve(__dirname, "../../api"),
+    outdir: API_OUT,
     outExtension: { ".js": ".mjs" },
     external: [
       "*.node",
@@ -103,6 +109,15 @@ globalThis.__dirname = __bannerPath.dirname(globalThis.__filename);
 `,
     }
   });
+
+  console.log("✅ API built successfully to", API_OUT);
+  
+  // List what was created
+  const files = fs.readdirSync(API_OUT);
+  console.log("📦 API files:", files.join(", "));
 }
 
-buildApi().catch(console.error);
+buildApi().catch((err) => {
+  console.error("❌ API build failed:", err);
+  process.exit(1);
+});

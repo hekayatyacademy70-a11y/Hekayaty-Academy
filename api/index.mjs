@@ -97680,6 +97680,14 @@ app.use(
 app.use((0, import_cors.default)());
 app.use(import_express15.default.json());
 app.use(import_express15.default.urlencoded({ extended: true }));
+app.get("/api/health", (req, res) => {
+  res.json({
+    ok: true,
+    hasDbUrl: !!process.env.DATABASE_URL,
+    hasSupabase: !!process.env.SUPABASE_URL,
+    dbUrlPrefix: process.env.DATABASE_URL ? process.env.DATABASE_URL.substring(0, 15) + "..." : null
+  });
+});
 app.use("/api", routes_default);
 app.use((err, req, res, next) => {
   if (err.code === "LIMIT_FILE_SIZE") {
@@ -97704,8 +97712,11 @@ app.use((err, req, res, next) => {
   });
 });
 var app_default = app;
+
+// artifacts/api-server/src/vercel-entry.ts
+var vercel_entry_default = app_default;
 export {
-  app_default as default
+  vercel_entry_default as default
 };
 /*! Bundled license information:
 
