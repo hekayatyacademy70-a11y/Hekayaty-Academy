@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth, Role } from "@/context/AuthContext";
 import {
@@ -17,8 +18,13 @@ import {
   ShieldAlert,
   Crown,
   Bell,
-  HeartPulse
+  HeartPulse,
+  ChevronRight,
+  ChevronLeft,
+  Menu,
+  X,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface SidebarItem {
   label: string;
@@ -114,32 +120,96 @@ export function Sidebar() {
   const [location] = useLocation();
   const { role } = useAuth();
   const config = getRoleConfig(role);
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const sidebarContent = (
+    <div className="flex flex-col h-full">
+      {/* Header */}
+      <div className={`flex items-center justify-between p-4 border-b border-sidebar-border ${collapsed ? "px-2" : ""}`}>
+        {!collapsed && (
+          <p className="text-xs font-bold text-sidebar-primary tracking-widest uppercase opacity-80 truncate">
+            {config.title}
+          </p>
+        )}
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="hidden md:flex items-center justify-center w-8 h-8 rounded-md hover:bg-sidebar-accent text-sidebar-foreground transition-colors flex-shrink-0 mr-auto"
+          title={collapsed ? "توسيع القائمة" : "تصغير القائمة"}
+        >
+          {collapsed ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+        </button>
+        {/* Close button for mobile */}
+        <button
+          onClick={() => setMobileOpen(false)}
+          className="md:hidden flex items-center justify-center w-8 h-8 rounded-md hover:bg-sidebar-accent text-sidebar-foreground transition-colors"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      </div>
+
+      {/* Nav Items */}
+      <nav className="flex-1 overflow-y-auto py-4 px-2 space-y-1">
+        {config.items.map((item) => {
+          const isActive = location === item.path;
+          const Icon = item.icon;
+          return (
+            <Link key={item.path} href={item.path} onClick={() => setMobileOpen(false)}>
+              <div
+                title={collapsed ? item.label : undefined}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-all cursor-pointer group ${
+                  collapsed ? "justify-center" : ""
+                } ${
+                  isActive
+                    ? "bg-sidebar-primary text-sidebar-primary-foreground font-medium shadow-md shadow-primary/20"
+                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                }`}
+              >
+                <Icon className={`w-5 h-5 flex-shrink-0 ${isActive ? "opacity-100" : "opacity-70 group-hover:opacity-100"}`} />
+                {!collapsed && <span className="text-sm truncate">{item.label}</span>}
+              </div>
+            </Link>
+          );
+        })}
+      </nav>
+    </div>
+  );
 
   return (
-    <aside className="hidden md:flex w-64 bg-sidebar flex-shrink-0 flex-col h-full border-l border-sidebar-border overflow-y-auto">
-      <div className="p-6">
-        <p className="text-xs font-bold text-sidebar-primary tracking-widest uppercase mb-4 opacity-80">
-          {config.title}
-        </p>
-        <nav className="space-y-1">
-          {config.items.map((item) => {
-            const isActive = location === item.path;
-            const Icon = item.icon;
-            return (
-              <Link key={item.path} href={item.path}>
-                <div className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors cursor-pointer group ${
-                  isActive 
-                    ? "bg-sidebar-primary text-sidebar-primary-foreground font-medium shadow-md shadow-primary/20" 
-                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                }`}>
-                  <Icon className={`w-5 h-5 ${isActive ? "opacity-100" : "opacity-70 group-hover:opacity-100"}`} />
-                  <span className="text-sm">{item.label}</span>
-                </div>
-              </Link>
-            );
-          })}
-        </nav>
-      </div>
-    </aside>
+    <>
+      {/* Mobile toggle button - shown in content area */}
+      <button
+        onClick={() => setMobileOpen(true)}
+        className={`md:hidden fixed bottom-6 left-4 z-40 w-12 h-12 rounded-full bg-sidebar-primary text-sidebar-primary-foreground shadow-lg flex items-center justify-center transition-transform hover:scale-105 ${mobileOpen ? "hidden" : "flex"}`}
+      >
+        <Menu className="w-5 h-5" />
+      </button>
+
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div
+          className="md:hidden fixed inset-0 z-40 bg-black/50"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      {/* Mobile drawer */}
+      <aside
+        className={`md:hidden fixed top-0 right-0 z-50 h-full w-72 bg-sidebar border-l border-sidebar-border overflow-y-auto transition-transform duration-300 ${
+          mobileOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        {sidebarContent}
+      </aside>
+
+      {/* Desktop sidebar */}
+      <aside
+        className={`hidden md:flex flex-col bg-sidebar flex-shrink-0 h-full border-l border-sidebar-border overflow-y-auto transition-all duration-300 ${
+          collapsed ? "w-16" : "w-64"
+        }`}
+      >
+        {sidebarContent}
+      </aside>
+    </>
   );
 }
