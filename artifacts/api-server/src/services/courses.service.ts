@@ -216,19 +216,36 @@ export class CoursesService {
   }
 
   /**
-   * Delete a course — only the owning instructor can delete
+   * Delete a course — only the owning instructor can delete.
+   * PROTECTED: cannot delete if any student has purchased/enrolled in this course.
    */
   async deleteCourse(courseId: string, instructorId: string) {
-    // Verify ownership first
+    // 1. Verify ownership
     const { data: course, error: findErr } = await supabase
       .from("courses")
-      .select("id, instructor_id")
+      .select("id, instructor_id, title")
       .eq("id", courseId)
       .single();
 
     if (findErr || !course) throw new Error("Course not found");
-    if (course.instructor_id !== instructorId) throw new Error("Forbidden: you don't own this course");
+    if (course.instructor_id !== instructorId)
+      throw new Error("Forbidden: you don't own this course");
 
+    // 2. Check for existing enrollments (purchased students)
+    const { count: enrollmentCount, error: enrollErr } = await supabase
+      .from("enrollments")
+      .select("id", { count: "exact", head: true })
+      .eq("course_id", courseId);
+
+    if (enrollErr) throw new Error(`Failed to check enrollments: ${enrollErr.message}`);
+
+    if (enrollmentCount && enrollmentCount > 0) {
+      throw new Error(
+        `لا يمكن حذف الدورة "${course.title}" لأن ${enrollmentCount} طالب قد اشتراها بالفعل. يمكنك إيقاف نشرها بدلاً من حذفها لحماية حقوق الطلاب.`
+      );
+    }
+
+    // 3. No enrolled students — safe to delete
     // Delete lessons first (cascade may not be set)
     const { data: sections } = await supabase
       .from("sections")
@@ -241,11 +258,32 @@ export class CoursesService {
       await supabase.from("sections").delete().in("id", sectionIds);
     }
 
-    // Delete enrollments
-    await supabase.from("enrollments").delete().eq("course_id", courseId);
-
     // Delete the course
     const { error: deleteErr } = await supabase.from("courses").delete().eq("id", courseId);
     if (deleteErr) throw new Error(`Failed to delete course: ${deleteErr.message}`);
+  }
+
+  /**
+   * Archive/unpublish a course instead of deleting it.
+   * Safe alternative when students have enrolled.
+   */
+  async archiveCourse(courseId: string, instructorId: string) {
+    const { data: course, error: findErr } = await supabase
+      .from("courses")
+      .select("id, instructor_id")
+      .eq("id", courseId)
+      .single();
+
+    if (findErr || !course) throw new Error("Course not found");
+    if (course.instructor_id !== instructorId)
+      throw new Error("Forbidden: you don't own this course");
+
+    const { error } = await supabase
+      .from("courses")
+      .update({ status: "archived" })
+      .eq("id", courseId);
+
+    if (error) throw new Error(`Failed to archive course: ${error.message}`);
+    return { success: true, message: "تم أرشفة الدورة بنجاح. لن تظهر للطلاب الجدد لكن المشتركين يحتفظون بوصولهم." };
   }
 }

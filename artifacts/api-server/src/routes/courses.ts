@@ -83,13 +83,34 @@ router.get("/:id/lessons/:lessonId", authenticate, async (req, res, next) => {
 
 /**
  * DELETE /api/courses/:id
- * Delete a course (instructor owner only)
+ * Delete a course (instructor owner only).
+ * BLOCKED if any student has enrolled/purchased this course.
  */
 router.delete("/:id", authenticate, async (req, res, next) => {
   try {
     const user = req.user as AuthUser;
     await coursesService.deleteCourse(req.params.id as string, user.userId);
-    res.json({ success: true });
+    res.json({ success: true, message: "تم حذف الدورة بنجاح" });
+  } catch (error: any) {
+    // If it's a "has enrolled students" error → 403 Forbidden with clear message
+    if (error.message?.includes("طالب قد اشتراها")) {
+      res.status(403).json({ error: error.message });
+      return;
+    }
+    next(error);
+  }
+});
+
+/**
+ * PATCH /api/courses/:id/archive
+ * Archive (unpublish) a course — safe alternative to deletion.
+ * The course is hidden from new students but existing enrollees keep access.
+ */
+router.patch("/:id/archive", authenticate, async (req, res, next) => {
+  try {
+    const user = req.user as AuthUser;
+    const result = await coursesService.archiveCourse(req.params.id as string, user.userId);
+    res.json(result);
   } catch (error) {
     next(error);
   }
