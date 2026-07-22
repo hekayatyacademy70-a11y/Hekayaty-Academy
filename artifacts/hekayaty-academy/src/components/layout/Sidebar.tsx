@@ -26,7 +26,7 @@ interface SidebarItem {
   path: string;
 }
 
-const getRoleConfig = (role: Role): { title: string, items: SidebarItem[] } => {
+export const getRoleConfig = (role: Role): { title: string, items: SidebarItem[] } => {
   switch (role) {
     case 'student':
       return {
@@ -116,7 +116,7 @@ export function Sidebar() {
   const config = getRoleConfig(role);
 
   return (
-    <aside className="w-64 bg-sidebar flex-shrink-0 flex flex-col h-full border-l border-sidebar-border overflow-y-auto">
+    <aside className="hidden md:flex w-64 bg-sidebar flex-shrink-0 flex-col h-full border-l border-sidebar-border overflow-y-auto">
       <div className="p-6">
         <p className="text-xs font-bold text-sidebar-primary tracking-widest uppercase mb-4 opacity-80">
           {config.title}

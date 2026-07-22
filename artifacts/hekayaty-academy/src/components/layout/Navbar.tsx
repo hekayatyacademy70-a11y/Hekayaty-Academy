@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Menu, User, BookOpen, Search } from "lucide-react";
+import { getRoleConfig } from "./Sidebar";
 
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -189,6 +190,32 @@ export function Navbar() {
                     <Link href="/auth/register" onClick={() => setIsMobileMenuOpen(false)}>
                       <Button className="w-full justify-start bg-[#D4A373] text-black hover:bg-[#C49040]">إنضم الآن</Button>
                     </Link>
+                  </div>
+                )}
+
+                {isAuthenticated && role && getRoleConfig(role).items.length > 0 && (
+                  <div className={`flex flex-col gap-2 mt-4 pt-4 border-t ${isDark ? 'border-white/10' : 'border-gray-200'}`}>
+                    <p className="text-sm font-bold text-[#D4A373] mb-2">{getRoleConfig(role).title}</p>
+                    <div className="grid grid-cols-1 gap-1">
+                      {getRoleConfig(role).items.map((item) => {
+                        const Icon = item.icon;
+                        return (
+                          <Link
+                            key={item.path}
+                            href={item.path}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className={`flex items-center gap-3 text-sm font-medium p-2 rounded-md transition-colors ${
+                              location === item.path 
+                                ? (isDark ? "bg-white/10 text-[#D4A373]" : "bg-black/5 text-[#C49040]")
+                                : (isDark ? "text-white/70 hover:text-white hover:bg-white/5" : "text-gray-600 hover:text-gray-900 hover:bg-black/5")
+                            }`}
+                          >
+                            <Icon className="w-4 h-4" />
+                            {item.label}
+                          </Link>
+                        );
+                      })}
+                    </div>
                   </div>
                 )}
               </div>
