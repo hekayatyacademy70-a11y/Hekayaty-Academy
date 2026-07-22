@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
@@ -10,9 +11,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Menu, User, BookOpen, Search } from "lucide-react";
 
 export function Navbar() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [location] = useLocation();
   const { user, role, isAuthenticated, logout } = useAuth();
   const { theme, setTheme } = useTheme();
@@ -154,9 +157,43 @@ export function Navbar() {
           )}
 
           {/* Mobile Menu Toggle */}
-          <Button variant="ghost" size="icon" className="md:hidden">
-            <Menu className="w-6 h-6" />
-          </Button>
+          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className={`md:hidden ${isDark ? "text-white" : "text-gray-900"}`}>
+                <Menu className="w-6 h-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className={`w-[300px] sm:w-[400px] ${isDark ? "bg-black/95 text-white border-white/10" : "bg-white text-gray-900"}`}>
+              <SheetHeader>
+                <SheetTitle className={`font-serif text-right ${logoTextColor}`}>أكاديمية حكاياتي</SheetTitle>
+              </SheetHeader>
+              <div className="flex flex-col gap-4 mt-8">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.path}
+                    href={link.path}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`text-lg font-medium py-2 border-b transition-colors ${
+                      location === link.path ? linkActive : `${isDark ? "border-white/10 hover:text-[#D4A373] text-white/80" : "border-gray-100 hover:text-[#C49040] text-gray-700"}`
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+                
+                {!isAuthenticated && (
+                  <div className="flex flex-col gap-3 mt-4">
+                    <Link href="/auth/login" onClick={() => setIsMobileMenuOpen(false)}>
+                      <Button variant="outline" className={`w-full justify-start ${isDark ? "border-white/30 text-white" : "border-gray-300 text-gray-800"}`}>تسجيل الدخول</Button>
+                    </Link>
+                    <Link href="/auth/register" onClick={() => setIsMobileMenuOpen(false)}>
+                      <Button className="w-full justify-start bg-[#D4A373] text-black hover:bg-[#C49040]">إنضم الآن</Button>
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </nav>
